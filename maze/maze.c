@@ -5,6 +5,7 @@
 	2.Draw the main character
 	3.Listen keyboard input and determine movement
 	4.Check if the route is valid(Not approaching the wall).
+		- Method: If the next coordinate is wall in the matrix, stop moving.
 	5.Move the charachter
 	6.Check if the character has successfully gone out.
 	-----------Operation-----------------------------
@@ -16,14 +17,10 @@
 */
 
 #include <stdio.h>
-#include "key.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include "../inc/console.h"
 
-#define KEY_UP 'W'
-#define KEY_DOWN 'S'
-#define KEY_LEFT 'A'
-#define KEY_RIGHT 'D'
 #define SPACE '.'
 #define WALL '#'
 
@@ -36,8 +33,6 @@ void initMaze(void);
 void draw(char myself, int x, int y);
 void move(char key, char myself);
 bool checkFile(FILE *fp);
-void moveCursor(int x, int y);
-void clearScreen(void);
 
 int main(int argc, char const *argv[])
 {
@@ -120,38 +115,38 @@ void draw(char myself, int x, int y){
 	}
 }
 
-//About UNIX-console cursor movement: http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x361.html
-//Payload: "\033[<L>;<C>H", L=line, C=col
-void moveCursor(int x, int y){
-	printf("\033[%d;%dH", x,y);
-}
-void clearScreen(void){
-	printf("\033[2J");
-}
 void move(char key, char myself){
 	switch(key){
-		case KEY_UP:
+		case 'w':
+		case 'W':
+		case UP:
 		if(x>0 && !maze[x-1][y]){
 			clearScreen();
 			draw(myself, --x, y);
 		}
 		break;
 
-		case KEY_DOWN:
+		case 's':
+		case 'S':
+		case DOWN:
 		if(x<15 && !maze[x+1][y]){
 			clearScreen();
 			draw(myself, ++x, y);
 		}
 		break;
 
-		case KEY_LEFT:
+		case 'a':
+		case 'A':
+		case LEFT:
 		if(y>0 && !maze[x][y-1]){
 			clearScreen();
 			draw(myself, x, --y);
 		}
 		break;
 
-		case KEY_RIGHT:
+		case 'd':
+		case 'D':
+		case RIGHT:
 		if(y<20 && !maze[x][y+1]){
 			clearScreen();
 			draw(myself, x, ++y);
